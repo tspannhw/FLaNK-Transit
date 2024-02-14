@@ -115,5 +115,55 @@ CREATE TABLE `ssb`.`Meetups`.`jsonmta` (
   'properties.auto.offset.reset' = 'earliest'
 )
 
+CREATE TABLE `ssb`.`Meetups`.`weather1` (
+  `uuid` VARCHAR(2147483647),
+  `ts` BIGINT,
+  `credit` VARCHAR(2147483647),
+  `credit_URL` VARCHAR(2147483647),
+  `image` ROW<`url` VARCHAR(2147483647), `title` VARCHAR(2147483647), `link` VARCHAR(2147483647)>,
+  `suggested_pickup` VARCHAR(2147483647),
+  `suggested_pickup_period` BIGINT,
+  `location` VARCHAR(2147483647),
+  `station_id` VARCHAR(2147483647),
+  `latitude` DOUBLE,
+  `longitude` DOUBLE,
+  `observation_time` VARCHAR(2147483647),
+  `observation_time_rfc822` VARCHAR(2147483647),
+  `weather` VARCHAR(2147483647),
+  `temperature_string` VARCHAR(2147483647),
+  `temp_f` DOUBLE,
+  `temp_c` DOUBLE,
+  `relative_humidity` BIGINT,
+  `wind_string` VARCHAR(2147483647),
+  `wind_dir` VARCHAR(2147483647),
+  `wind_degrees` BIGINT,
+  `wind_mph` DOUBLE,
+  `wind_kt` BIGINT,
+  `pressure_in` DOUBLE,
+  `dewpoint_string` VARCHAR(2147483647),
+  `dewpoint_f` DOUBLE,
+  `dewpoint_c` DOUBLE,
+  `visibility_mi` DOUBLE,
+  `icon_url_base` VARCHAR(2147483647),
+  `two_day_history_url` VARCHAR(2147483647),
+  `icon_url_name` VARCHAR(2147483647),
+  `ob_url` VARCHAR(2147483647),
+  `disclaimer_url` VARCHAR(2147483647),
+  `copyright_url` VARCHAR(2147483647),
+  `privacy_policy_url` VARCHAR(2147483647),
+  `eventTimestamp` TIMESTAMP(3) WITH LOCAL TIME ZONE METADATA FROM 'timestamp',
+  WATERMARK FOR `eventTimestamp` AS `eventTimestamp` - INTERVAL '3' SECOND
+) WITH (
+  'deserialization.failure.policy' = 'ignore_and_log',
+  'properties.request.timeout.ms' = '120000',
+  'format' = 'json',
+  'properties.bootstrap.servers' = 'kafka:9092',
+  'connector' = 'kafka',
+  'properties.transaction.timeout.ms' = '900000',
+  'topic' = 'weather',
+  'scan.startup.mode' = 'group-offsets',
+  'properties.auto.offset.reset' = 'earliest',
+  'properties.group.id' = 'ssbweather001'
+)
 
 ````
