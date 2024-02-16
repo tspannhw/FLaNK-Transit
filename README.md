@@ -203,3 +203,41 @@ from jsonmta m
 
 
 ````
+
+
+#FLINK JOIN SQL
+
+````
+
+SELECT n.speed, n.travel_time, n.borough, n.link_name, n.link_points,
+       n.latitude, n.longitude, DISTANCE_BETWEEN(CAST(t.latitude as STRING), 
+                 CAST(t.latitude as STRING), 
+                 m.VehicleLocationLatitude, m.VehicleLocationLongitude) as miles, 
+       t.title, t.`description`, t.pubDate, t.latitude, t.longitude,
+       m.VehicleLocationLatitude, m.VehicleLocationLongitude, 
+       m.StopPointRef, m.VehicleRef,
+       m.ProgressRate, m.ExpectedDepartureTime, m.StopPoint,
+       m.VisitNumber, m.DataFrameRef, m.StopPointName,
+       m.Bearing, m.OriginAimedDepartureTime, m.OperatorRef,
+       m.DestinationName, m.ExpectedArrivalTime, m.BlockRef,
+       m.LineRef, m.DirectionRef, m.ArrivalProximityText,
+       m.DistanceFromStop, m.EstimatedPassengerCapacity, 
+       m.AimedArrivalTime, m.PublishedLineName, 
+       m.ProgressStatus, m.DestinationRef, m.EstimatedPassengerCount,
+       m.OriginRef, m.NumberOfStopsAway, m.ts
+FROM  jsonmta /*+ OPTIONS('scan.startup.mode' = 'earliest-offset') */  m
+      FULL OUTER JOIN jsontranscom /*+ OPTIONS('scan.startup.mode' = 'earliest-offset') */  t
+       ON (t.latitude >= CAST(m.VehicleLocationLatitude as float) - 0.3) 
+       AND (t.longitude >= CAST(m.VehicleLocationLongitude as float) - 0.3) 
+       AND (t.latitude <= CAST(m.VehicleLocationLatitude as float) + 0.3) 
+       AND (t.longitude <= CAST(m.VehicleLocationLongitude as float) + 0.3)   
+     FULL OUTER JOIN nytrafficspeed /*+ OPTIONS('scan.startup.mode' = 'earliest-offset') */  n
+     ON (n.latitude >= CAST(m.VehicleLocationLatitude as float) - 0.3) 
+     AND (n.longitude >= CAST(m.VehicleLocationLongitude as float) - 0.3) 
+     AND (n.latitude <= CAST(m.VehicleLocationLatitude as float) + 0.3) 
+     AND (n.longitude <= CAST(m.VehicleLocationLongitude as float) + 0.3) 
+WHERE m.VehicleRef is not null  
+AND   t.title is not null
+
+
+````
