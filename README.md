@@ -172,3 +172,34 @@ CREATE TABLE `ssb`.`Meetups`.`weather1` (
 )
 
 ````
+
+
+### Flink SQL
+
+````
+
+
+
+select n.speed, n.travel_time, n.borough, n.link_name, n.link_points,
+       n.latitude, n.longitude
+from nytrafficspeed n
+
+select t.title, t.descrtiption, t.pubDate, t.latitude, t.longitude
+from jsontranscom t
+
+
+select m.VehicleLocationLatitude, m.VehicleLocationLongitude, 
+       m.StopPointRef, m.VehicleRef,
+       m.ProgressRate, m.ExpectedDepartureTime, m.StopPoint,
+       m.VisitNumber, m.DataFrameRef, m.StopPointName,
+       m.Bearing, m.OriginAimedDepartureTime, m.OperatorRef,
+       m.DestinationName, m.ExpectedArrivalTime, m.BlockRef,
+       m.LineRef, m.DirectionRef, m.ArrivalProximityText,
+       m.DistanceFromStop, m.EstimatedPassengerCapacity, 
+       m.AimedArrivalTime, m.PublishedLineName, m.Date,
+       m.ProgressStatus, m.DestinationRef, m.EstimatedPassengerCount,
+       m.OriginRef, m.NumberOfStopsAway, m.ts
+from jsonmta m
+
+
+````
