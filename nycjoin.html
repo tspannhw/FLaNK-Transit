@@ -1,0 +1,166 @@
+<html>
+<head>
+<title>MTA/Speed/Transcom - New York City - FLaNK Stack with NiFi, Kafka, Flink, Materialize View HTML</title>
+<link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<meta charset="UTF-8">
+<!-- include leaflet css and javascript -->
+<link rel="stylesheet" crossorigin="" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js" crossorigin=""></script>
+
+<style type="text/css">
+    #map {
+        height: 450px;
+    }
+</style>
+</head>
+<body bgcolor="white" text="black">
+
+<div style="font-size: 30; font-weight: bold; font-family: sans-serif;">
+    <p>
+        <strong><b>NiFi/Kafka/Flink - Data Tables - NYC - MTA/NY Speed/TRANSCOM</b></strong>
+     </p>
+</div>
+<br>
+<div id="map"></div>
+
+<script type="text/javascript">
+
+    const customerIcon =  L.icon({
+        iconUrl: "./images/blue-dot.png",
+        className: "image-icon",
+        iconSize: [20, 20]
+    });
+
+    const carIcon = L.icon({
+        iconUrl: "./images/car-icon-side-9.jpeg",
+        className: "image-icon",
+        iconSize: [30, 30]
+    });
+
+    var map = null;
+    var marker = null;
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4){
+            var buslocation = JSON.parse(xhr.responseText);
+
+            let i = 0;
+            if (map == null) {
+                map = L.map('map').setView([buslocation[i].VehicleLocationLatitude, buslocation[i].VehicleLocationLongitude], 14);
+                L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+
+                let marker = new L.marker([buslocation[i].VehicleLocationLatitude, buslocation[i].VehicleLocationLongitude], { icon: customerIcon }).addTo(map);
+            }
+
+            i++;
+            while (i < buslocation.length) {
+                marker = new L.marker([buslocation[i].VehicleLocationLatitude, buslocation[i].VehicleLocationLongitude], { icon: customerIcon }).addTo(map).bindPopup('Arrival:' + buslocation[i].ArrivalProximityText +
+                     ' Destination:'+ buslocation[i].DestinationName).openPopup();
+
+                i++;
+            }
+        }
+
+    };
+
+xhr.open('GET', 'http://localhost:18131/api/v1/query/5278/mtatransspeed?key=8ab6adf5-62e3-4b5a-bc85-f3bc04d20e0c&limit=1000');
+    xhr.send();
+
+</script>
+
+<br>
+<table id="transit1" class="display" style="width:100%; text-align:left;">
+        <thead>
+            <tr>
+                       <th valign="left"><b>Start Date</b></th>
+                       <th valign="left"><b>Destination</b></th>
+                       <th valign="left"><b>Estimated Arrival</b></th>
+                       <th valign="left"><b>Vehicle</b></th>
+                       <th valign="left"><b>Bearing</b></th>
+                       <th valign="left"><b>Lat/Long</b></th>
+                       <th valign="left"><b>Speed</b></th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                       <th valign="left"><b>Start Date</b></th>
+                       <th valign="left"><b>Destination</b></th>
+                       <th valign="left"><b>Estimated Arrival</b></th>
+                       <th valign="left"><b>Vehicle</b></th>
+                       <th valign="left"><b>Bearing</b></th>
+                       <th valign="left"><b>Lat/Long</b></th>
+                       <th valign="left"><b>Speed</b></th>
+            </tr>
+        </tfoot>
+    </table>
+<script>
+
+function isEmpty(val){
+    return (val === undefined || val == null || val.length <= 0) ? true : false;
+}
+function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+$(document).ready(function() {
+    var t = $('#transit1').DataTable();
+
+$.getJSON(
+    'http://localhost:18131/api/v1/query/5278/mtatransspeed?key=8ab6adf5-62e3-4b5a-bc85-f3bc04d20e0c&limit=1000', 
+    function(data) {
+      $.each( data, function( key, val ) {
+
+        var startdate= "";
+        if ( !isEmpty(data[key].pubDate) ) {
+            startdate = data[key].pubDate;
+        }
+        var route_long_name= "";
+        if ( !isEmpty(data[key].DestinationName) ) {
+            route_long_name = data[key].DestinationName;
+        }
+        var eax= "";
+        if ( !isEmpty(data[key].ExpectedArrivalTime) ) {
+            eax = data[key].ExpectedArrivalTime;
+        }
+        var vehiclelabel= "";
+        if ( !isEmpty(data[key].VehicleRef) ) {
+            vehiclelabel = data[key].VehicleRef;
+        }
+        var bearing= "";
+        if ( !isEmpty(data[key].Bearing) ) {
+            bearing = data[key].Bearing;
+        }
+        var latitude= "";
+        if ( !isEmpty(data[key].VehicleLocationLatitude) ) {
+            latitude = data[key].VehicleLocationLatitude;
+        }
+        var longitude= "";
+        if ( !isEmpty(data[key].VehicleLocationLongitude) ) {
+            longitude = data[key].VehicleLocationLongitude;
+        }
+        var speed= "";
+        if ( !isEmpty(data[key].speed) ) {
+            speed = data[key].speed;
+        }
+
+        t.row.add( [ startdate, route_long_name, eax, vehiclelabel,
+                     bearing, (latitude + "," + longitude), speed ]).draw(true);
+      });
+    });
+}); 
+</script>
+<p>
+<br></p>
+<p><br></p><br>
+&copy; 2021-2022-2023-2024 Tim Spann @PaasDev - datainmotion.dev
+<br>           
+</body>
+</html>
