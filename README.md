@@ -285,3 +285,9 @@ AND   t.title is not null
 {"speed":"47.22","travel_time":"30","borough":"Staten Island","link_name":"SIE W BRADLEY AVENUE - WOOLEY AVENUE","link_points":"40.6077805,-74.14091 40.60826,-74.132101","latitude":"40.6077805","longitude":"-74.14091","miles":"5475.42","title":"Prudential Center - ROCK :wrestling","description":"Prudential Center: wrestling on Prudential Center - ROCK at (Newark) World Championship Sumo The Biggest Show On Earth, Sunday February 18th, 2024, 07:00 PM thru 10:00 PM","pubDate":"2023-12-28T13:21:01","latitude0":"40.7335901472838","longitude0":"-74.1711848974228","VehicleLocationLatitude":"40.793904","VehicleLocationLongitude":"-73.970047","StopPointRef":"MTA_401935","VehicleRef":"MTA NYCT_9774","ProgressRate":"normalProgress","ExpectedDepartureTime":"2024-02-14T08:35:06.327-05:00","StopPoint":"","VisitNumber":"1","DataFrameRef":"2024-02-14","StopPointName":"W 96 ST/AMSTERDAM AV","Bearing":"337.36087","OriginAimedDepartureTime":"","OperatorRef":"MTA NYCT","DestinationName":"EAST HARLEM FDR DRIVE CROSSTOWN","ExpectedArrivalTime":"2024-02-14T08:35:06.327-05:00","BlockRef":"MTA NYCT_MV_A4-Weekday-SDon_E_MV_25200_M96-811","LineRef":"MTA NYCT_M106","DirectionRef":"0","ArrivalProximityText":"at stop","DistanceFromStop":"8","EstimatedPassengerCapacity":"","AimedArrivalTime":"2024-02-14T08:29:18.691-05:00","PublishedLineName":"M106","ProgressStatus":"","DestinationRef":"MTA_803066","EstimatedPassengerCount":"","OriginRef":"MTA_401933","NumberOfStopsAway":"0","ts":"1707917736851","eventTimeStamp":"2024-02-16 00:21:35.259","allid":"e3c0e9d8-473d-4edd-9b07-5c83c66e73b116fb14f5-e981-48ef-879e-1d4eee92131e8ab5b20a-f907-4ad6-bbd7-853ef81f0464"},
 
 ````
+
+
+#### YOLO V8
+
+pip3.10 install ultralytics -U
+
